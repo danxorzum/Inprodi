@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:inprodi/providers/user_provider.dart';
+import 'package:inprodi/models/client_model.dart';
+import 'package:inprodi/models/user_model.dart';
 
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:inprodi/providers/user_provider.dart';
 import 'package:inprodi/providers/clients_provider.dart';
 
 class HomeView extends StatefulWidget {
@@ -122,6 +124,9 @@ class _BottomBar extends StatelessWidget {
     return BottomNavigationBar(
       backgroundColor: Colors.white,
       currentIndex: 0,
+      selectedLabelStyle: TextStyle(
+        color: theme.primaryColor,
+      ),
       onTap: (_) {},
       items: [
         BottomNavigationBarItem(
@@ -191,27 +196,92 @@ class __ListState extends State<_List> {
 
     return ListView.builder(
         controller: _ctrl,
-        itemBuilder: (_, i) => ListTile(
-            leading: Image(
-              image: AssetImage('assets/lococo.png'),
+        itemBuilder: (_, i) => _Tile(
+              widget: widget,
+              client: clients[i],
             ),
-            title: Text(
-              clients[i].name,
-              style: TextStyle(
-                  color: widget.theme.primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15),
+        itemCount: clients.length);
+  }
+}
+
+class _Tile extends StatelessWidget {
+  const _Tile({
+    required this.widget,
+    required this.client,
+  });
+
+  final Client client;
+  final _List widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        height: 110,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+                margin: EdgeInsets.symmetric(horizontal: 25),
+                width: 80,
+                height: 105,
+                decoration: BoxDecoration(
+                    boxShadow: [BoxShadow(color: Colors.black54)],
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(9)),
+                child: Image.asset('assets/lococo.png')),
+            Container(
+              alignment: Alignment.centerLeft,
+              width: 220,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    client.name,
+                    style: TextStyle(
+                        color: widget.theme.primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  Text(
+                    client.email,
+                    style: TextStyle(color: Colors.black45, fontSize: 13),
+                  )
+                ],
+              ),
             ),
-            subtitle: Text(
-              clients[i].email,
-              style: TextStyle(color: Colors.black45),
-            ),
-            trailing: IconButton(
+            IconButton(
                 onPressed: () {},
                 icon: Icon(
                   Icons.more_vert,
                   color: widget.theme.primaryColor,
-                ))),
-        itemCount: clients.length);
+                ))
+          ],
+        ));
   }
 }
+
+// ListTile(
+//                     dense: false,
+//                     isThreeLine: true,
+//                     leading: Image(
+//                       image: AssetImage('assets/lococo.png'),
+//                     ),
+//                     title: Text(
+//                       clients[i].name,
+//                       style: TextStyle(
+//                           color: widget.theme.primaryColor,
+//                           fontWeight: FontWeight.bold,
+//                           fontSize: 15),
+//                     ),
+//                     subtitle: Text(
+//                       clients[i].email,
+//                       style: TextStyle(color: Colors.black45),
+//                     ),
+//                     trailing: IconButton(
+//                         onPressed: () {},
+//                         icon: Icon(
+//                           Icons.more_vert,
+//                           color: widget.theme.primaryColor,
+//                         )))
