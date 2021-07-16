@@ -1,3 +1,4 @@
+import "dart:developer";
 import 'package:flutter/material.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
@@ -224,7 +225,7 @@ class _Tile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-                margin: EdgeInsets.symmetric(horizontal: 25),
+                margin: EdgeInsets.symmetric(horizontal: 15),
                 width: 80,
                 height: 105,
                 decoration: BoxDecoration(

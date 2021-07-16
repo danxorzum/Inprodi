@@ -1,3 +1,4 @@
+import "dart:developer";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "package:inprodi/repositories/clients/clients_model.dart";
@@ -11,7 +12,8 @@ class _ClientsNotifier extends StateNotifier<ClientsState> {
     try {
       final List<ClientModel>? newClients =
           await ClientsRepository().getClients();
-      state = ClientsState(clients: newClients);
+
+      state = state.fromPrevious(clients: newClients);
     } catch (err) {}
   }
 }
