@@ -4,13 +4,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-import 'package:inprodi/models/user_model.dart';
+import "package:inprodi/repositories/auth/auth_model.dart";
 
-class DBService {
+class AuthRepository {
   static Database? _database;
-  static final DBService db = DBService._();
+  static final AuthRepository db = AuthRepository._();
 
-  DBService._();
+  AuthRepository._();
 
   Future<Database?> get database async {
     if (_database != null) return _database;
@@ -49,15 +49,29 @@ class DBService {
     return res;
   }
 
-  Future<UserModel?> logIn(String email, String pass) async {
+  Future<UserModel?> login(String email, String pass) async {
     final db = await database;
     final res =
         await db!.rawQuery('SELECT * FROM Users WHERE email LIKE "%$email%"');
+
     List<_UserDB> list =
         res.isNotEmpty ? res.map((c) => _UserDB.fromJson(c)).toList() : [];
     if (list.isEmpty) return null;
     if (list[0].pass != pass) return null;
+
     return UserModel(list[0].id, list[0].name, list[0].email, list[0].phone);
+  }
+
+  static Future<bool> register(
+      String name, String email, int phone, String pass) async {
+    try {
+      final int regis = await AuthRepository.db
+          .newUser(name: name, email: email, pass: pass, phone: phone);
+
+      return regis != -1;
+    } catch (err) {
+      return false;
+    }
   }
 }
 
@@ -67,6 +81,7 @@ class _UserDB {
   String email;
   int phone;
   String pass;
+
   _UserDB(this.id, this.name, this.email, this.phone, this.pass);
 
   factory _UserDB.fromJson(Map<String, dynamic> json) => _UserDB(

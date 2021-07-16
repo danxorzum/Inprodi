@@ -16,8 +16,8 @@ class ClientsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // bool logIn(String email, String pass) async {
-  //   final UserModel? user = await DBService.db.logIn(email, pass);
+  // bool login(String email, String pass) async {
+  //   final UserModel? user = await DBService.db.login(email, pass);
   //   if (user != null) {
   //     _name = user.name;
   //     _email = user.email;

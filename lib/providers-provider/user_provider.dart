@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 
 import 'package:inprodi/models/user_model.dart';
-import 'package:inprodi/services/db_service.dart';
+import "package:inprodi/repositories/auth/auth_repository.dart";
 
 class UserProvider with ChangeNotifier {
   UserModel? _user;
 
   UserModel? get user => _user;
 
-  Future<bool> logIn(String email, String pass) async {
-    final UserModel? log = await DBService.db.logIn(email, pass);
+  Future<bool> login(String email, String pass) async {
+    final UserModel? log = await DBService.db.login(email, pass);
 
     if (log == null) return false;
     _user = log;

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:inprodi/models/client_model.dart';
-import 'package:inprodi/models/user_model.dart';
+import "package:flutter_riverpod/flutter_riverpod.dart";
 
-import 'package:provider/provider.dart';
+import "package:inprodi/providers/auth/auth_provider.dart";
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:inprodi/providers/user_provider.dart';
-import 'package:inprodi/providers/clients_provider.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -79,12 +76,9 @@ class _HomeViewState extends State<HomeView> {
 }
 
 class _WelcomeText extends StatefulWidget {
-  const _WelcomeText({
-    Key? key,
-    required this.theme,
-  }) : super(key: key);
-
   final ThemeData theme;
+
+  const _WelcomeText({required this.theme});
 
   @override
   __WelcomeTextState createState() => __WelcomeTextState();
@@ -93,20 +87,26 @@ class _WelcomeText extends StatefulWidget {
 class __WelcomeTextState extends State<_WelcomeText> {
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      textAlign: TextAlign.start,
-      text: TextSpan(
-          style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[700]),
-          children: [
-            TextSpan(
-                text: 'Hola',
-                style:
-                    TextStyle(fontSize: 20, color: widget.theme.primaryColor)),
-            TextSpan(text: ', ${context.read<UserProvider>().user?.name}!'),
-          ]),
+    return Consumer(
+      builder: (context, watch, child) {
+        String username = watch(authProvider).userModel?.name ?? "";
+
+        return RichText(
+          textAlign: TextAlign.start,
+          text: TextSpan(
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[700]),
+              children: [
+                TextSpan(
+                    text: 'Hola',
+                    style: TextStyle(
+                        fontSize: 20, color: widget.theme.primaryColor)),
+                TextSpan(text: ', $username!')
+              ]),
+        );
+      },
     );
   }
 }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import "package:flutter_riverpod/flutter_riverpod.dart";
 
-import 'package:provider/provider.dart';
-
-import 'package:inprodi/providers/user_provider.dart';
 import 'package:inprodi/widgets/widgets.dart';
+import 'package:inprodi/providers/auth/auth_provider.dart';
 
 class LoginView extends StatelessWidget {
   @override
@@ -60,6 +59,7 @@ class _Forms extends StatefulWidget {
 class _FormsState extends State<_Forms> {
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -84,9 +84,11 @@ class _FormsState extends State<_Forms> {
         ),
         LargeButton(
           onPressed: () async {
-            if (await context
-                .read<UserProvider>()
-                .logIn(emailCtrl.text, passCtrl.text)) {
+            final bool? success = await context
+                .read(authProvider.notifier)
+                .login(emailCtrl.text, passCtrl.text);
+
+            if (success != null && success) {
               Navigator.pushReplacementNamed(context, 'home');
             } else {
               print('valio versh');

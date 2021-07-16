@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:inprodi/models/user_model.dart';
-import 'package:inprodi/providers/user_provider.dart';
-import 'package:inprodi/services/db_service.dart';
+
+import "package:inprodi/repositories/auth/auth_repository.dart";
 import 'package:inprodi/widgets/widgets.dart';
-import 'package:provider/provider.dart';
 
 class RegisterView extends StatelessWidget {
   @override
@@ -50,11 +48,22 @@ class __FormsState extends State<_Forms> {
   final emailCtrl = TextEditingController();
   final phoneCtrl = TextEditingController();
   final passCtrl = TextEditingController();
+
   bool terms = false;
   bool notify = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    nameCtrl.dispose();
+    emailCtrl.dispose();
+    phoneCtrl.dispose();
+    passCtrl.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final userProvider = context.read<UserProvider>();
     return Container(
       child: Column(
         children: [
@@ -140,24 +149,22 @@ class __FormsState extends State<_Forms> {
             ),
           ),
           SizedBox(),
-          LargeButton(
-              onPressed: () async {
-                await _submit(userProvider);
-              },
-              text: 'Registrar')
+          LargeButton(onPressed: () => _submit(), text: 'Registrar')
         ],
       ),
     );
   }
 
-  _submit(UserProvider provider) async {
+  _submit() async {
     if (nameCtrl.text.length >= 6 &&
         emailCtrl.text.length > 6 &&
         phoneCtrl.text.length == 10 &&
         passCtrl.text.length >= 8 &&
         terms) {
-      if (await provider.register(nameCtrl.text, emailCtrl.text,
-          int.parse(phoneCtrl.text), passCtrl.text)) {
+      final bool? success = await AuthRepository.register(nameCtrl.text,
+          emailCtrl.text, int.parse(phoneCtrl.text), passCtrl.text);
+
+      if (success != null) {
         Navigator.pushReplacementNamed(context, 'login');
       } else {
         print('valio queso');

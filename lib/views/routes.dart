@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:inprodi/views/home_view.dart';
-import 'package:inprodi/views/login_View.dart';
+import 'package:inprodi/views/login_view.dart';
 import 'package:inprodi/views/register_view.dart';
 
 final Map<String, Widget Function(BuildContext)> appRoutes = {
