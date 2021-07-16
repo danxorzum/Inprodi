@@ -8,7 +8,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'InprodiApp',
-      initialRoute: 'login',
+      initialRoute: 'home',
       routes: appRoutes,
       theme: mainTheme,
     );

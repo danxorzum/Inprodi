@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:inprodi/models/client_model.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "package:inprodi/providers/auth/auth_provider.dart";
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:inprodi/providers/clients/clients_provider.dart';
+import 'package:inprodi/repositories/clients/clients_model.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -178,12 +179,12 @@ class __ListState extends State<_List> {
   final _ctrl = ScrollController();
   @override
   void initState() {
-    context.read<ClientsProvider>().getClients();
+    context.read(clientProvider.notifier).getClients();
     _ctrl.addListener(() {
       if (_ctrl.position.atEdge) {
         if (_ctrl.position.pixels == 0) {
         } else {
-          Provider.of<ClientsProvider>(context, listen: false).getClients();
+          context.read(clientProvider.notifier).getClients();
         }
       }
     });
@@ -192,15 +193,16 @@ class __ListState extends State<_List> {
 
   @override
   Widget build(BuildContext context) {
-    final clients = context.watch<ClientsProvider>().clients;
-
-    return ListView.builder(
-        controller: _ctrl,
-        itemBuilder: (_, i) => _Tile(
-              widget: widget,
-              client: clients[i],
-            ),
-        itemCount: clients.length);
+    return Consumer(builder: (context, watch, child) {
+      final clients = watch(clientProvider).clients;
+      return ListView.builder(
+          controller: _ctrl,
+          itemBuilder: (_, i) => _Tile(
+                widget: widget,
+                client: clients![i],
+              ),
+          itemCount: clients!.length);
+    });
   }
 }
 
@@ -210,7 +212,7 @@ class _Tile extends StatelessWidget {
     required this.client,
   });
 
-  final Client client;
+  final ClientModel client;
   final _List widget;
 
   @override
@@ -261,27 +263,3 @@ class _Tile extends StatelessWidget {
         ));
   }
 }
-
-// ListTile(
-//                     dense: false,
-//                     isThreeLine: true,
-//                     leading: Image(
-//                       image: AssetImage('assets/lococo.png'),
-//                     ),
-//                     title: Text(
-//                       clients[i].name,
-//                       style: TextStyle(
-//                           color: widget.theme.primaryColor,
-//                           fontWeight: FontWeight.bold,
-//                           fontSize: 15),
-//                     ),
-//                     subtitle: Text(
-//                       clients[i].email,
-//                       style: TextStyle(color: Colors.black45),
-//                     ),
-//                     trailing: IconButton(
-//                         onPressed: () {},
-//                         icon: Icon(
-//                           Icons.more_vert,
-//                           color: widget.theme.primaryColor,
-//                         )))
